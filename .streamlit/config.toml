@@ -8,6 +8,7 @@ font = "serif"  # Default font
 [client]
 showSidebarNavigation = false
 toolbarMode = "minimal"
+headless = true
 
 [server]
 port = "8090"
