@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, func
-from classificacao_img_radiologia.models.database import Base
+from models.database import Base
 
 class Usuario(Base):
     __tablename__ = 'usuario'

@@ -22,7 +22,7 @@ class DatabaseSession:
     
     _instance = None
 
-    def __new__(cls, db_url):
+    def __new__(cls, db_url=DATABASE_URL):
         if cls._instance is None:
             cls._instance = super(DatabaseSession, cls).__new__(cls)
             cls._instance._init_engine(db_url)

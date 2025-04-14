@@ -1,5 +1,6 @@
 import streamlit as st
 from partials.BasePage import BasePage
+from services.usuario.Usuario import UsuarioService
 
 class RegistroUsuario(BasePage):
     def __init__(self):
@@ -7,7 +8,18 @@ class RegistroUsuario(BasePage):
         st.session_state['page'] = 'Registro de Usuário'    
     
     def _register_user(self):
-        ...
+        if self.matricula == "":
+            self.matricula = None
+        if self.curso == "":    
+            self.curso = None
+        success, message = UsuarioService.register(
+            self.nome, self.usuario, self.senha1,
+            self.email, self.matricula, self.curso
+        )
+        if success:
+            st.success("Usuário registrado com sucesso!")
+        else:
+            st.error("Erro ao registrar usuário: " + str(message))
     
     def draw(self):
         
