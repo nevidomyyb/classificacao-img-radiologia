@@ -1,6 +1,6 @@
 import streamlit as st
 from partials.BasePage import BasePage
-
+from streamlit import switch_page
 class Main(BasePage):
     def __init__(self):
         super().__init__('Login', '🔑', 'centered')
@@ -18,7 +18,7 @@ class Main(BasePage):
                 ...
             if c2.button('Registrar'):
                 #Go to tela de registro
-                ...
+                switch_page('pages/register_user.py')
 if __name__ == "__main__":
     main = Main()
     main.mount()

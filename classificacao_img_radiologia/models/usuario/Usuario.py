@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Boolean
+from sqlalchemy import Column, String, Integer, Boolean, DateTime, func
 from classificacao_img_radiologia.models.database import Base
 
 class Usuario(Base):
@@ -6,7 +6,10 @@ class Usuario(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)  
     nome = Column(String(100), nullable=False)
-    matricula = Column(String(20), nullable=False, unique=True)
+    matricula = Column(String(20), nullable=True, unique=True)
     usuario = Column(String(20), nullable=False, unique=True)
     senha = Column(String(150), nullable=False)
-    curso = Column(String(50), nullable=False)
+    curso = Column(String(50), nullable=True)
+    dtcriado = Column(DateTime(timezone=True), default=func.now(), nullable=False)
+    
+    email = Column(String(180), nullable=False, unique=True)
