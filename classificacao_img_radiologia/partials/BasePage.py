@@ -1,6 +1,6 @@
 import streamlit as st
-
-class BasePage():
+from partials.Bottom import Bottom
+class BasePage(Bottom):
     
     def __init__(self, title: str, icon: str, layout: str, sidebar_state: str=None):
         try:
@@ -10,3 +10,4 @@ class BasePage():
     
     def mount(self, ):
         self.draw()
+        self.draw_bottom()
