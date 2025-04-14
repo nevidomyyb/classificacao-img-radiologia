@@ -12,9 +12,13 @@ class Main(BasePage):
         with st.container(border=True):
             usuario = st.text_input("Usuário", placeholder="Digite seu usuário")
             senha = st.text_input("Senha", type="password", placeholder="Digite sua senha")
-            if st.button('Entrar', disabled=not usuario or not senha):
-                st.success("Sucesso")
-            
+            c1, _, _, c2 = st.columns([1, 2, 2, 1])
+            if c1.button('Entrar', disabled=not usuario or not senha):
+                #Logica para checar senha
+                ...
+            if c2.button('Registrar'):
+                #Go to tela de registro
+                ...
 if __name__ == "__main__":
     main = Main()
     main.mount()
