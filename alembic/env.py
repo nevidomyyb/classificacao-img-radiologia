@@ -10,7 +10,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from classificacao_img_radiologia.models import Usuario
+from classificacao_img_radiologia.models import Usuario, Imagem, Classificacao
 
 from urllib.parse import quote_plus
 from pathlib import Path
