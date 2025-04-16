@@ -1,6 +1,9 @@
 from sqlalchemy import Column, String, Integer, DateTime, func, Date, ForeignKey
 from sqlalchemy.orm import validates
-from models.database import Base
+try:
+    from classificacao_img_radiologia.models.database import Base
+except:
+    from models.database import Base
 
 class Classificacao(Base):
     __tablename__ = 'classificacao'

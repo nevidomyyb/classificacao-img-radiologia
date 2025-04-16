@@ -1,19 +1,21 @@
 
 
-from dotenv import load_dotenv
 import os
+import sys
 
+from dotenv import load_dotenv
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
 from alembic import context
-
 from classificacao_img_radiologia.models import Usuario, Imagem, Classificacao
-
 from urllib.parse import quote_plus
 from pathlib import Path
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 load_dotenv(Path(__file__).resolve().parent.parent / "classificacao_img_radiologia" / ".env")
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

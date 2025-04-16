@@ -1,4 +1,6 @@
 import streamlit as st
+import os
+import sys
 
 from services.usuario.Usuario import UsuarioService
 from partials.BasePage import BasePage
@@ -29,5 +31,10 @@ class Main(BasePage):
                 #Go to tela de registro
                 switch_page('pages/register_user.py')
 if __name__ == "__main__":
+    
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+    
     main = Main()
     main.mount()

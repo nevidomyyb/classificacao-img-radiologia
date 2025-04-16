@@ -1,5 +1,9 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, func
-from models.database import Base
+try:
+    from classificacao_img_radiologia.models.database import Base
+except:
+    from models.database import Base
+
 
 class Usuario(Base):
     __tablename__ = 'usuario'
