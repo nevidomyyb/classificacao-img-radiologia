@@ -10,7 +10,7 @@ class Bottom:
             </a>
             """
         )
-    
+    @st.fragment()
     def draw_bottom(self, ):
         
         st.html(
@@ -27,6 +27,8 @@ class Bottom:
             </style>
             """,
         )
+        st.markdown("##")
+        st.markdown("##")
         st.html(
             f"""
             <img src="https://img.icons8.com/?size=24&id=61343&format=png&color=000000">
