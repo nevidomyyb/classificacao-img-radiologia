@@ -16,6 +16,19 @@ class UsuarioService:
         return hashed_pass == saved_password
     
     @staticmethod
+    def get_user_id_by_cookie():
+        CManager = CookieManager()
+        USERNAME = CManager.get_cookie_manager().get('AUTH_USERNAME_UNCISAL')
+        db = DatabaseSession()
+        session = db.get_session()
+        try:
+            user_id = session.execute(select(Usuario.id).where(Usuario.usuario == USERNAME)).scalar()
+            return user_id
+        except:
+            session.rollback()
+            traceback.print_exc()
+            return None
+    @staticmethod
     def logout():
         CManager = CookieManager()
         CManager.get_cookie_manager().delete('AUTH_COOKIE_UNCISAL', key='delete-0')
