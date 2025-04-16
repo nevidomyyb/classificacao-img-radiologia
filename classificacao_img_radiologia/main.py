@@ -10,7 +10,10 @@ class Main(BasePage):
         st.session_state['page'] = 'login'
         
     def draw(self):
-        
+        isAuthenticated = UsuarioService.check_login_cookie()
+        if isAuthenticated:
+            switch_page('pages/register_classifcacao.py')
+            
         with st.container(border=True):
             usuario = st.text_input("Usuário", placeholder="Digite seu usuário")
             senha = st.text_input("Senha", type="password", placeholder="Digite sua senha")

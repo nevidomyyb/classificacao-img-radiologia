@@ -1,9 +1,12 @@
 from db import DatabaseSession
 from models import Usuario
 from sqlalchemy import or_, select
+from dotenv import load_dotenv
+from services.CookieManager import CookieManager
 
 import hashlib
 import traceback
+import os
 
 class UsuarioService:
     
@@ -12,6 +15,32 @@ class UsuarioService:
         hashed_pass = hashlib.sha256(plain_password.encode()).hexdigest()
         return hashed_pass == saved_password
     
+    @staticmethod
+    def logout():
+        CManager = CookieManager()
+        CManager.get_cookie_manager().delete('AUTH_COOKIE_UNCISAL', key='delete-0')
+        CManager.get_cookie_manager().delete('AUTH_USERNAME_UNCISAL', key='delete-1')
+    
+    @staticmethod
+    def create_login_cookie(username:str):
+        load_dotenv()
+        SALT = os.getenv('COOKIE_SALT')
+        cookie = f'{username}:{SALT}'
+        hashed_cookie = hashlib.sha256(cookie.encode()).hexdigest()
+        return hashed_cookie
+    
+    @staticmethod
+    def check_login_cookie():
+        load_dotenv()
+        SALT = os.getenv('COOKIE_SALT')
+        CManager = CookieManager()
+        username = CManager.get_cookie_manager().get('AUTH_USERNAME_UNCISAL')
+        if not username:
+            return False
+        hashed_cookie = hashlib.sha256(f'{username}:{SALT}'.encode()).hexdigest()
+        cookie = CManager.get_cookie_manager().get('AUTH_COOKIE_UNCISAL')
+        return hashed_cookie == cookie
+            
     @staticmethod
     def login(username: str, password: str, session=None):
         if not session:
@@ -24,6 +53,10 @@ class UsuarioService:
             if not user:
                 return [False, "Usuário ou senha inválidos."]
             if  UsuarioService.check_password(password, user.senha):
+                cookie = UsuarioService.create_login_cookie(user.usuario)
+                CManager = CookieManager()
+                CManager.get_cookie_manager().set('AUTH_COOKIE_UNCISAL', cookie, key='set-0')
+                CManager.get_cookie_manager().set('AUTH_USERNAME_UNCISAL', user.usuario, key='set-1')
                 return [True, user]
             else:
                 return [False, "Usuário ou senha inválidos."]
