@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_extras.bottom_container import bottom
 
 class Bottom:
     
