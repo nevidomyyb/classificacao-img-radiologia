@@ -222,6 +222,20 @@ files = [
 ]
 
 [[package]]
+name = "extra-streamlit-components"
+version = "0.1.80"
+description = "An all-in-one place, to find complex or just natively unavailable components on streamlit."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "extra_streamlit_components-0.1.80-py3-none-any.whl", hash = "sha256:7a8c151da5dcd1f1f97b6c29caa812a1d77928d20fc4bf42a3a4fd788274dd9e"},
+    {file = "extra_streamlit_components-0.1.80.tar.gz", hash = "sha256:87d6c38e07381501d8882796adef17d1c1d4e3a79615864d95c1163d2bc136f6"},
+]
+
+[package.dependencies]
+streamlit = ">=1.40.1"
+
+[[package]]
 name = "gitdb"
 version = "4.0.12"
 description = "Git Object Database"
@@ -1355,4 +1369,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9761753d69d631d96ad0fa747b48108d7c53483987c88cb96e4264aa1a4d28b9"
+content-hash = "79a3393b1fb81e5e3ceeaac8b61b1915aff65667d1ba3013bdaed51848943804"

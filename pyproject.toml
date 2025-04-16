@@ -12,6 +12,7 @@ sqlalchemy = "^2.0.40"
 alembic = "^1.15.2"
 python-dotenv = "^1.1.0"
 mysqlclient = "^2.2.7"
+extra-streamlit-components = "^0.1.80"
 
 
 [build-system]
