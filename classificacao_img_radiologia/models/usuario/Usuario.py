@@ -17,3 +17,5 @@ class Usuario(Base):
     dtcriado = Column(DateTime(timezone=True), default=func.now(), nullable=False)
     
     email = Column(String(180), nullable=False, unique=True)
+    administrador = Column(Boolean, default=False, nullable=False)
+    
