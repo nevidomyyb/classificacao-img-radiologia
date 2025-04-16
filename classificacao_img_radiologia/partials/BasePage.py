@@ -9,5 +9,7 @@ class BasePage(Bottom):
             ...
     
     def mount(self, ):
+        _, col, _ = st.columns([1, 1, 1])
+        col.image('classificacao_img_radiologia/assets/UNCISAL.png', width=200)
         self.draw()
         self.draw_bottom()
