@@ -1,8 +1,5 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, func
-try:
-    from classificacao_img_radiologia.models.database import Base
-except:
-    from models.database import Base
+from models.database import Base
 
 
 class Usuario(Base):
@@ -19,3 +16,6 @@ class Usuario(Base):
     email = Column(String(180), nullable=False, unique=True)
     administrador = Column(Boolean, default=False, nullable=False)
     
+    @property
+    def is_admin(self):
+        return self.administrador
