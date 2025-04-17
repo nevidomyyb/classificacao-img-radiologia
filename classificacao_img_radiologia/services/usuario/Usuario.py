@@ -43,18 +43,21 @@ class UsuarioService:
         return hashed_cookie
     
     @staticmethod
-    def get_name_from_cookie():
+    def get_name_from_cookie(return_user=False):
         CManager = CookieManager()
         username = CManager.get_cookie_manager().get('AUTH_USERNAME_UNCISAL')
         db = DatabaseSession()
         session = db.get_session()
         try:
-            nome = session.execute(select(Usuario.nome).where(Usuario.usuario == username)).scalar()
+            user = session.execute(select(Usuario).where(Usuario.usuario == username)).scalar()
+            if return_user:
+                return user.nome, user
+            return user.nome
         except:
             session.rollback()
             traceback.print_exc()
             return None
-        return nome
+    
     
     @staticmethod
     def check_login_cookie():
