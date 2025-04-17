@@ -1,13 +1,69 @@
 from db import DatabaseSession
 from models import Classificacao, Imagem
-from sqlalchemy import or_, select
+from sqlalchemy import or_, select, func
 from utils.get_base_folder import get_media_folder
 
 import os
 import traceback
-
+import shutil
 
 class ClassificacaoService:
+    
+    @staticmethod
+    def delete_classification(class_id, _session=None):
+        if not _session:
+            db = DatabaseSession()
+            _session = db.get_session()
+        try:
+            classification = _session.scalar(select(Classificacao).where(Classificacao.id == class_id))
+            path_to_delete = classification.media_folder
+            if os.path.exists(path_to_delete):
+                shutil.rmtree(path_to_delete)
+            for img_instance in classification.imagens:
+                _session.delete(img_instance)
+            _session.delete(classification)
+            _session.commit()
+            return True, "Classificação deletada com sucesso."
+        except  Exception as e:
+            traceback.print_exc()
+            return False, str(e)
+    
+    @staticmethod
+    def save_classification(class_dict: dict, class_id: int, _session=None):
+        if not _session:
+            db = DatabaseSession()
+            _session = db.get_session()
+        try:
+            classification = _session.scalar(select(Classificacao).where(Classificacao.id == class_id))
+            classification.classificacao = class_dict['classificacao']
+            classification.genero = class_dict['genero']
+            classification.dtnascimento_paciente = class_dict['dtnascimento_paciente']
+            classification.dtprocedimento = class_dict['dtprocedimento']
+            _session.commit()
+            return True, "Classificação atualizada com sucesso."
+        except Exception as e:
+            traceback.print_exc()
+            _session.rollback()
+            return False, str(e)
+            
+    @staticmethod
+    def get_classifications(user_id:int, is_admin:bool, page:int=1, _session=None)->tuple[bool, list[Classificacao], int]:
+        if not _session:
+            db = DatabaseSession()
+            _session = db.get_session()
+        
+        try:
+            stmt = select(Classificacao)
+            if not is_admin:
+                stmt = stmt.where(Classificacao.usuario_id == user_id)
+            stmt = stmt.order_by(Classificacao.dtcadastro.desc()).limit(10).offset((page-1)*10)
+            result = _session.execute(stmt).scalars().all()
+            total = _session.scalar(select(func.count(Classificacao.id)))
+            return True, result, total
+        except Exception as e:
+            traceback.print_exc()
+            return False, str(e), None
+            
     
     @staticmethod
     def register(classificacao:str, genero:str, dtnascimento_paciente: str, dtprocedimento:str, imagens:list, usuario_id: int, session=None) -> list:
