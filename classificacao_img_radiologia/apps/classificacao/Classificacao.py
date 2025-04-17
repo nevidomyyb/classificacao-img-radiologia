@@ -12,7 +12,7 @@ class Classificacao(BasePage):
     def _register_classificacao(self, usuario_id: int):
         success, classificacao_id, n_imagens = ClassificacaoService.register(
             self.classifcacao,
-            self.genero,
+            self.genero['value'],
             self.dtnascimento_paciente,
             self.dtprocedimento,
             self.imagems,
@@ -28,10 +28,10 @@ class Classificacao(BasePage):
         with st.container(border=True):
             
             options  = ['Normal', 'Com alteração']
-            genres = ['M', 'F']
+            genres = [{"value": "M", "label": "Masculino"}, {"value": "F", "label": "Feminino"}]
             self.imagems = st.file_uploader("Enviar Imagem", type=['jpg', 'jpeg', 'png'], accept_multiple_files=True, )
             self.classifcacao = st.selectbox('Classificação', options, index=None, placeholder='Selecione uma opção')
-            self.genero = st.selectbox('Gênero', genres, index=None, placeholder='Selecione uma opção')
+            self.genero = st.selectbox('Gênero', genres, index=None, placeholder='Selecione uma opção', format_func=lambda x : x['label'])
             self.dtnascimento_paciente = st.date_input('Data de Nascimento do Paciente', value=None, format="DD/MM/YYYY")
             self.dtprocedimento = st.date_input('Data do Procedimento', value=None, format='DD/MM/YYYY')
             
