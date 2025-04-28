@@ -13,6 +13,7 @@ alembic = "^1.15.2"
 python-dotenv = "^1.1.0"
 mysqlclient = "^2.2.7"
 extra-streamlit-components = "^0.1.80"
+streamlit-extras = "^0.6.0"
 
 
 [build-system]
@@ -20,5 +21,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-streamlit = "classificacao_img_radiologia.runner:main"
+rst = "classificacao_img_radiologia.runner:main"
 
