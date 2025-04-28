@@ -4,7 +4,7 @@ from services.usuario.Usuario import UsuarioService
 
 class BasePage(Bottom):
     
-    def __init__(self, title: str, icon: str, layout: str, sidebar_state: str=None, image: bool=True):
+    def __init__(self, title: str, icon: str, layout: str, sidebar_state: str='collapsed', image: bool=True):
         self.image = image
         try:
             st.set_page_config(page_title=title, page_icon=icon, layout=layout, initial_sidebar_state=sidebar_state)

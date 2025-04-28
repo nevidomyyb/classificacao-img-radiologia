@@ -12,6 +12,7 @@ class ListagemClassificacao(BasePage):
         super().__init__("Listagem de Classificações", '', 'wide', 'collapsed', image=False)    
         st.session_state['page'] = 'Listagem de Classificações'
     
+    @st.fragment
     def draw_list_with_pagination(self):
         if 'delete_info' in st.session_state:
             st.success(st.session_state['delete_info'])
@@ -26,10 +27,10 @@ class ListagemClassificacao(BasePage):
         _, col1, col2, col3 = st.columns([5, 1, 1, 1], gap='small')
         if col1.button("", icon=":material/chevron_left:", disabled=st.session_state['page_classificacao'] == 1):
             st.session_state['page_classificacao'] -= 1
-            st.rerun()
+            st.rerun(scope='fragment')
         if col2.button("", icon=":material/chevron_right:", disabled=st.session_state['page_classificacao'] >= pages):
             st.session_state['page_classificacao'] += 1
-            st.rerun()
+            st.rerun(scope='fragment')
         pages_list = [1] if total <= 10 else [i for i in range(1, pages+1)]
         st.session_state['page_classificacao'] = col3.selectbox(
             'Página',
@@ -59,7 +60,6 @@ class ListagemClassificacao(BasePage):
                     cols[3].button('-----', key=f'btn_dtnascimento_{classificacao.id}',on_click=self.show_classification, args=(classificacao,), type='tertiary')
                 cols[4].button(classificacao.genero, key=f'btn_genero_{classificacao.id}',on_click=self.show_classification, args=(classificacao,), type='tertiary')
     
-    @st.fragment
     @st.dialog("Classificação", width='large')
     def show_classification(self, classificacao: Classificacao):
         imagens = classificacao.imagens

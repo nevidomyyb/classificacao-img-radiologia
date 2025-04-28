@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_extras.bottom_container import bottom
 
 class Bottom:
     
@@ -27,14 +28,16 @@ class Bottom:
             </style>
             """,
         )
-        st.markdown("##")
-        st.markdown("##")
-        st.html(
-            f"""
-            <img src="https://img.icons8.com/?size=24&id=61343&format=png&color=000000">
-            Desenvolvido por
-            <a href="https://www.linkedin.com/in/pedro-cunha-nev/" class="custom-link" target="_blank">
-                <img src="https://img.icons8.com/?size=24&id=85044&format=png&color=000000" alt="linkedin"/> Pedro Cunha
-            </a>
-            """
-        )
+        # st.markdown("##")
+        # st.markdown("##")
+        with bottom():
+            st.html(
+                f"""
+                <img src="https://img.icons8.com/?size=24&id=61343&format=png&color=000000">
+                
+                Desenvolvido por
+                <a href="https://www.linkedin.com/in/pedro-cunha-nev/" class="custom-link" target="_blank">
+                    <img src="https://img.icons8.com/?size=24&id=85044&format=png&color=000000" alt="linkedin"/> Pedro Cunha
+                </a>
+                """
+            )
