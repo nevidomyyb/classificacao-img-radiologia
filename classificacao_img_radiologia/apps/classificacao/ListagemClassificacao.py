@@ -60,21 +60,49 @@ class ListagemClassificacao(BasePage):
                     cols[3].button('-----', key=f'btn_dtnascimento_{classificacao.id}',on_click=self.show_classification, args=(classificacao,), type='tertiary')
                 cols[4].button(classificacao.genero, key=f'btn_genero_{classificacao.id}',on_click=self.show_classification, args=(classificacao,), type='tertiary')
     
+    def send_new_images(self, key, class_id):
+        imagens = st.session_state[key]
+        succ, msg = ClassificacaoService.add_image_to_register(class_id, imagens, self.user_id)
+        if succ:
+            st.session_state.should_rerun = True
+        else:
+            st.error(msg)
+    
     @st.dialog("Classificação", width='large')
     def show_classification(self, classificacao: Classificacao):
+        if 'should_rerun' in st.session_state and st.session_state.should_rerun:
+            st.session_state.should_rerun = False
+            st.rerun()
+            
         imagens = classificacao.imagens
         if 'curr' not in st.session_state:
             st.session_state.curr = 0
         with st.container(border=True):
-            col1, col2 = st.columns([1, 1],gap='large')
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 1],gap='large')
             if col1.button("", icon=":material/chevron_left:"):
                 if st.session_state.curr > 0:
                     st.session_state.curr -= 1
             if col2.button("", icon=":material/chevron_right:"):
                 if st.session_state.curr < len(imagens) - 1:
                     st.session_state.curr += 1
-            current_img = imagens[st.session_state.curr]
-            st.image(current_img.imagem_full_path, )
+            with col4.popover("", icon=":material/add:", help='Adicionar nova imagem'):
+                imagens_to_upload = st.file_uploader(
+                    'Novas imagens', type=['jpg', 'jpeg', 'png'], 
+                    key=f'new-images-{classificacao.id}',
+                    accept_multiple_files=True, 
+                    on_change=self.send_new_images, args=(f'new-images-{classificacao.id}', classificacao.id)
+                )
+            try:
+                current_img = imagens[st.session_state.curr]
+                st.image(current_img.imagem_full_path, )
+            except IndexError:
+                st.info('Não há registros de imagem.')
+            if col3.button("", icon=":material/delete:"):
+                succ, msg = ClassificacaoService.delete_image_from_register(classificacao.id, current_img.imagem_full_path)
+                if succ:
+                    st.rerun()
+                else:
+                    st.error(f'{msg}')
         _classificacao = st.selectbox(
             "Classificação",
             ["Normal", "Com alteração"],
@@ -109,6 +137,7 @@ class ListagemClassificacao(BasePage):
     
     def draw(self):
         isAuthenticated = UsuarioService.check_login_cookie()
+        self.user_id = UsuarioService.get_user_id_by_cookie()
         if not isAuthenticated:
             st.switch_page('main.py')
         self.draw_list_with_pagination()

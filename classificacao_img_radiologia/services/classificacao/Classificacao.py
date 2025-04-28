@@ -63,16 +63,65 @@ class ClassificacaoService:
         except Exception as e:
             traceback.print_exc()
             return False, str(e), None
-            
+    @staticmethod
+    def add_image_to_register(class_id, imagens: list, user_id:int, _session=None) -> list[bool, str]:
+        MEDIA_FOLDER = get_media_folder()
+        if not _session:
+            db = DatabaseSession()
+            _session = db.get_session()
+        
+        try:
+            classificacao = _session.scalar(select(Classificacao).where(Classificacao.id == class_id))
+            class_media_folder = os.path.join(MEDIA_FOLDER, f'user-{str(user_id)}-classificacao-{str(classificacao.id)}')
+            os.makedirs(MEDIA_FOLDER, exist_ok=True)
+            os.makedirs(class_media_folder, exist_ok=True)
+            for image in imagens:
+                save_path = os.path.join(class_media_folder, image.name)
+                with open(save_path, 'wb') as f:
+                    f.write(image.getvalue())
+                imagem_ = Imagem(
+                    imagem_full_path=save_path,
+                    classificacao_id=classificacao.id,   
+                )
+                _session.add(imagem_)
+            _session.commit()
+            return True, 'Imagens registradas com sucesso.'
+        except Exception as e:
+            traceback.print_exc()
+            _session.rollback()
+            return False, str(e)         
+
+    @staticmethod
+    def delete_image_from_register(class_id:int, image_path=str,_session=None) -> list[bool, str]:
+        if not _session:
+            db = DatabaseSession()
+            _session = db.get_session()
+        
+        try:
+            classificacao = _session.scalar(select(Classificacao).where(Classificacao.id == class_id))
+            image_to_delete = _session.scalar(select(Imagem).where(Imagem.imagem_full_path==image_path))
+            if not image_to_delete:
+                return False, "Imagem não encontrada."
+            classificacao.imagens.remove(image_to_delete)
+            if os.path.exists(image_to_delete.imagem_full_path):
+                os.remove(image_to_delete.imagem_full_path)
+                _session.delete(image_to_delete)
+                _session.commit()
+                return True, 'Imagem excluida com sucesso.'
+            return False, 'Algo ocorreu, imagem não excluida.'
+        except Exception as e:
+            traceback.print_exc()
+            _session.rollback()
+            return False, str(e),
     
     @staticmethod
-    def register(classificacao:str, genero:str, dtnascimento_paciente: str, dtprocedimento:str, imagens:list, usuario_id: int, session=None) -> list:
+    def register(classificacao:str, genero:str, dtnascimento_paciente: str, dtprocedimento:str, imagens:list, usuario_id: int, _session=None) -> list:
         
         MEDIA_FOLDER = get_media_folder()
         
-        if not session:
+        if not _session:
             db = DatabaseSession()
-            session = db.get_session()
+            _session = db.get_session()
         
         try:
             classificacao = Classificacao(
@@ -82,9 +131,9 @@ class ClassificacaoService:
                 dtprocedimento=dtprocedimento,
                 usuario_id=usuario_id
             )
-            session.add(classificacao)
-            session.commit()
-            session.flush()
+            _session.add(classificacao)
+            _session.commit()
+            _session.flush()
             class_media_folder = os.path.join(MEDIA_FOLDER, f'user-{str(usuario_id)}-classificacao-{str(classificacao.id)}')
             os.makedirs(MEDIA_FOLDER, exist_ok=True)
             os.makedirs(class_media_folder, exist_ok=True)
@@ -96,10 +145,10 @@ class ClassificacaoService:
                     imagem_full_path=save_path,
                     classificacao_id=classificacao.id,   
                 )
-                session.add(imagem_)
-                session.commit()
+                _session.add(imagem_)
+                _session.commit()
             return True, classificacao.id, len(imagens)
         except Exception as e:
             traceback.print_exc()
-            session.rollback()
+            _session.rollback()
             return False, str(e), None
