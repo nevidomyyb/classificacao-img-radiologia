@@ -1,5 +1,8 @@
 from sqlalchemy import Column, String, Integer, Boolean, DateTime, func, Date, ForeignKey
-from models.database import Base
+try:
+    from models.database import Base
+except:
+    from classificacao_img_radiologia.models.database import Base
 
 
 class Imagem(Base):

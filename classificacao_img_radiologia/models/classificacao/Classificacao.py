@@ -2,8 +2,15 @@ import os
 
 from sqlalchemy import Column, String, Integer, DateTime, func, Date, ForeignKey
 from sqlalchemy.orm import validates, relationship
-from models.database import Base
-from utils.get_base_folder import get_media_folder
+try:
+    from models.database import Base
+except:
+    from classificacao_img_radiologia.models.database import Base
+try:
+    
+    from utils.get_base_folder import get_media_folder
+except:
+    from classificacao_img_radiologia.utils.get_base_folder import get_media_folder
 
 class Classificacao(Base):
     __tablename__ = 'classificacao'
